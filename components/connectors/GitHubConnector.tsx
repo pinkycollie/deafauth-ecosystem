@@ -1,9 +1,10 @@
 
+
 import React from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
-import { AzureIcon } from '../icons/AzureIcon';
+import { GitHubIcon } from '../icons/GitHubIcon';
 import { AuthProviderType } from '../../types';
 
 interface ConnectorProps {
@@ -11,12 +12,11 @@ interface ConnectorProps {
     onSuccess: () => void;
 }
 
-const AzureConnector: React.FC<ConnectorProps> = ({ onBack }) => {
+const GitHubConnector: React.FC<ConnectorProps> = ({ onBack }) => {
     const { login, loading, error } = useAuth();
     
     const handleConnect = () => {
-        // The useAuth hook now calls Supabase's signInWithOAuth for Azure
-        login(AuthProviderType.AZURE, {});
+        login(AuthProviderType.GITHUB, {});
     };
 
     return (
@@ -25,10 +25,10 @@ const AzureConnector: React.FC<ConnectorProps> = ({ onBack }) => {
                 <ArrowLeftIcon />
                 Back
             </button>
-             <div className="flex flex-col items-center">
-                <AzureIcon className="w-12 h-12 mb-4 text-blue-500" />
-                <h3 className="text-xl font-bold text-center text-white mb-2">Sign in with Azure AD</h3>
-                <p className="text-center text-gray-400 text-sm mb-6">Use your work or school account to sign in.</p>
+            <div className="flex flex-col items-center">
+                <GitHubIcon className="w-12 h-12 mb-4" />
+                <h3 className="text-xl font-bold text-center text-white mb-2">Sign in with GitHub</h3>
+                <p className="text-center text-gray-400 text-sm mb-6">You will be redirected to GitHub to sign in.</p>
             </div>
 
             {error && <p className="text-red-400 text-center text-sm mb-4">{error}</p>}
@@ -36,12 +36,12 @@ const AzureConnector: React.FC<ConnectorProps> = ({ onBack }) => {
             <button
                 onClick={handleConnect}
                 disabled={loading}
-                className="w-full flex items-center justify-center p-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-white font-bold disabled:bg-blue-800 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors duration-200 text-white font-bold disabled:bg-gray-900 disabled:cursor-not-allowed border border-gray-600"
             >
-                {loading ? <SpinnerIcon /> : 'Continue with Microsoft'}
+                {loading ? <SpinnerIcon /> : 'Continue with GitHub'}
             </button>
         </div>
     );
 };
 
-export default AzureConnector;
+export default GitHubConnector;

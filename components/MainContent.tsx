@@ -4,45 +4,43 @@ import { useAuth } from '../hooks/useAuth';
 import UserProfile from './UserProfile';
 import AuthModal from './AuthModal';
 import { SpinnerIcon } from './icons/SpinnerIcon';
+import { LogoIcon } from './icons/LogoIcon';
 
 const MainContent: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const { user, loading } = useAuth();
+    const [isAuthModalOpen, setAuthModalOpen] = useState(false);
 
-  if (loading) {
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center text-gray-400">
+                <SpinnerIcon className="w-10 h-10" />
+                <p className="mt-4">Initializing Session...</p>
+            </div>
+        );
+    }
+
     return (
-      <div className="flex flex-col items-center justify-center text-center">
-        <SpinnerIcon className="w-12 h-12 mb-4" />
-        <p className="text-lg text-gray-400">Verifying session...</p>
-      </div>
+        <>
+            {user ? (
+                <UserProfile />
+            ) : (
+                <div className="text-center bg-gray-800/50 border border-gray-700 p-12 rounded-lg shadow-2xl max-w-lg">
+                    <LogoIcon className="h-16 w-16 text-pink-500 mx-auto mb-4" />
+                    <h2 className="text-3xl font-bold text-white mb-2">Welcome to the Ecosystem</h2>
+                    <p className="text-gray-400 mb-8">
+                        Join a decentralized studio where ideas are valued and creators are empowered.
+                    </p>
+                    <button
+                        onClick={() => setAuthModalOpen(true)}
+                        className="px-8 py-3 bg-pink-600 text-white font-bold rounded-lg hover:bg-pink-700 transition-transform transform hover:scale-105"
+                    >
+                        Sign In / Create Account
+                    </button>
+                </div>
+            )}
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
+        </>
     );
-  }
-  
-  if (isAuthenticated) {
-    return <UserProfile />;
-  }
-
-  return (
-    <>
-      <div className="text-center">
-        <h2 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-          DeafAuth Ecosystem
-        </h2>
-        <p className="mt-4 max-w-md mx-auto text-lg text-gray-400 sm:text-xl md:mt-5 md:max-w-3xl">
-          A suite of protocols for identity, ethics, and persistence. Securely connect to begin.
-        </p>
-        <div className="mt-8">
-          <button
-            onClick={() => setIsAuthModalOpen(true)}
-            className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 md:py-4 md:text-lg md:px-10 transform transition-transform duration-200 hover:scale-105"
-          >
-            Connect & Sign In
-          </button>
-        </div>
-      </div>
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-    </>
-  );
 };
 
 export default MainContent;

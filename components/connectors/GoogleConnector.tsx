@@ -1,24 +1,23 @@
+
+
 import React from 'react';
-import { AuthProviderType } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { GoogleIcon } from '../icons/GoogleIcon';
-import ErrorDisplay from '../ErrorDisplay';
+import { AuthProviderType } from '../../types';
 
 interface ConnectorProps {
     onBack: () => void;
     onSuccess: () => void;
 }
 
-const GoogleConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
+const GoogleConnector: React.FC<ConnectorProps> = ({ onBack }) => {
     const { login, loading, error } = useAuth();
     
-    const handleConnect = async () => {
-        // In a real app, this would trigger the Google OAuth flow.
-        await login(AuthProviderType.GOOGLE, {
-            scope: "email profile openid",
-        });
+    const handleConnect = () => {
+        // The useAuth hook now calls Supabase's signInWithOAuth
+        login(AuthProviderType.GOOGLE, {});
     };
 
     return (
@@ -33,7 +32,7 @@ const GoogleConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
                 <p className="text-center text-gray-400 text-sm mb-6">You will be redirected to Google to sign in.</p>
             </div>
 
-            <ErrorDisplay message={error} />
+            {error && <p className="text-red-400 text-center text-sm mb-4">{error}</p>}
             
             <button
                 onClick={handleConnect}

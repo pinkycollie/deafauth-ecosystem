@@ -1,5 +1,7 @@
 {
-  "name": "DeafAuth (azure)",
-  "description": "An ecosystem built on the principles of DeafAuth, Fibonrose, and PersistID, creating a decentralized and ethical studio for building ideas.",
-  "requestFramePermissions": []
+  "name": "DeafAuth Ecosystem",
+  "description": "A decentralized studio for creators, governed by the Fibonrose protocol and secured by novel authentication methods.",
+  "requestFramePermissions": [
+    "camera"
+  ]
 }

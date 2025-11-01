@@ -1,9 +1,10 @@
+
+
 import React, { useState } from 'react';
 import { AuthProviderType } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
-import ErrorDisplay from '../ErrorDisplay';
 
 interface ConnectorProps {
     onBack: () => void;
@@ -12,23 +13,17 @@ interface ConnectorProps {
 
 const EmailConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
     const [email, setEmail] = useState('');
-    const [mfaCode, setMfaCode] = useState('');
-    const [view, setView] = useState<'email' | 'mfa'>('email');
+    const [submitted, setSubmitted] = useState(false);
     const { login, loading, error } = useAuth();
 
-    const handleEmailSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // In a real app, this would trigger an API call to send the code.
-        // Here, we just switch the view.
-        setView('mfa');
-    };
-
-    const handleMfaSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-         await login(AuthProviderType.EMAIL, {
-            email: email,
-            mfaCode,
-        });
+        await login(AuthProviderType.EMAIL, { email });
+        // We check for *no* error from the context before setting submitted state
+        const { error: authError } = useAuth();
+        if (!authError) {
+            setSubmitted(true);
+        }
     };
 
     return (
@@ -39,15 +34,13 @@ const EmailConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
             </button>
             <h3 className="text-xl font-bold text-center text-white mb-2">Sign in with Email</h3>
             
-            <ErrorDisplay message={error} />
+            {error && <p className="text-red-400 text-center text-sm my-4">{error}</p>}
 
-            {view === 'email' ? (
+            {!submitted ? (
                 <>
-                    <p className="text-center text-gray-400 text-sm mb-6">We'll send a secure login code to your email.</p>
-                    <form onSubmit={handleEmailSubmit}>
-                        <label htmlFor="email-input" className="sr-only">Email address</label>
+                    <p className="text-center text-gray-400 text-sm mb-6">We'll send a secure magic link to your email.</p>
+                    <form onSubmit={handleSubmit}>
                         <input
-                            id="email-input"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -57,41 +50,18 @@ const EmailConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
                         />
                         <button
                             type="submit"
-                            disabled={loading || !email}
+                            disabled={loading}
                             className="w-full flex items-center justify-center p-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors duration-200 text-white font-bold disabled:bg-purple-800 disabled:cursor-not-allowed"
                         >
-                            {loading ? <SpinnerIcon /> : 'Continue'}
+                            {loading ? <SpinnerIcon /> : 'Send Magic Link'}
                         </button>
                     </form>
                 </>
             ) : (
-                <>
-                    <p className="text-center text-gray-400 text-sm mb-6">
-                        We've sent a code to <strong className="text-gray-200">{email}</strong>. Please enter it below.
-                    </p>
-                     <form onSubmit={handleMfaSubmit}>
-                        <label htmlFor="mfa-input" className="sr-only">Verification Code</label>
-                        <input
-                            id="mfa-input"
-                            type="text"
-                            value={mfaCode}
-                            onChange={(e) => setMfaCode(e.target.value)}
-                            placeholder="123456"
-                            maxLength={6}
-                            className="w-full bg-gray-900 border border-gray-600 rounded-md p-3 mb-4 text-white text-center tracking-[0.5em] text-lg font-mono placeholder-gray-500 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition"
-                            required
-                            autoComplete="one-time-code"
-                            inputMode="numeric"
-                        />
-                        <button
-                            type="submit"
-                            disabled={loading || mfaCode.length < 6}
-                            className="w-full flex items-center justify-center p-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors duration-200 text-white font-bold disabled:bg-purple-800 disabled:cursor-not-allowed"
-                        >
-                            {loading ? <SpinnerIcon /> : 'Verify & Sign In'}
-                        </button>
-                    </form>
-                </>
+                <div className="text-center">
+                    <p className="text-gray-300">Magic link sent to <strong>{email}</strong>.</p>
+                    <p className="text-gray-400 mt-2">Please check your inbox and click the link to sign in.</p>
+                </div>
             )}
         </div>
     );

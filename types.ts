@@ -1,4 +1,5 @@
 
+
 export enum Role {
   GUEST = 'guest',
   MEMBER = 'member',
@@ -16,16 +17,24 @@ export interface User {
     preferredLanguage?: string;
     walletAddress?: string;
   };
+  isVerified: boolean;
+}
+
+export interface UserUpdatePayload {
+  displayName?: string;
+  profileMeta?: {
+    preferredLanguage?: string;
+  };
 }
 
 export enum AuthProviderType {
+  EMAIL = 'email',
+  GOOGLE = 'google',
+  GITHUB = 'github',
+  // FIX: Add missing provider types to resolve compilation errors.
   WALLET = 'wallet',
   DEAF_AUTH = 'deaf_auth',
-  EMAIL = 'email',
   PASSKEY = 'passkey',
-  FIBONROSE = 'fibonrose',
-  PERSIST_ID = 'persist_id',
-  GOOGLE = 'google',
   AZURE = 'azure',
-  ONEAUTH = 'oneauth',
+  ONEAUTH = 'zoho',
 }

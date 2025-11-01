@@ -1,24 +1,22 @@
+
 import React from 'react';
-import { AuthProviderType } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { OneAuthIcon } from '../icons/OneAuthIcon';
-import ErrorDisplay from '../ErrorDisplay';
+import { AuthProviderType } from '../../types';
 
 interface ConnectorProps {
     onBack: () => void;
     onSuccess: () => void;
 }
 
-const OneAuthConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
+const OneAuthConnector: React.FC<ConnectorProps> = ({ onBack }) => {
     const { login, loading, error } = useAuth();
     
-    const handleConnect = async () => {
-        // In a real app, this would trigger the Zoho OAuth flow.
-        await login(AuthProviderType.ONEAUTH, {
-            scope: "profile.readonly",
-        });
+    const handleConnect = () => {
+        // The useAuth hook now calls Supabase's signInWithOAuth for Zoho
+        login(AuthProviderType.ONEAUTH, {});
     };
 
     return (
@@ -33,7 +31,7 @@ const OneAuthConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
                 <p className="text-center text-gray-400 text-sm mb-6">Use your Zoho account to sign in securely.</p>
             </div>
 
-            <ErrorDisplay message={error} />
+            {error && <p className="text-red-400 text-center text-sm mb-4">{error}</p>}
             
             <button
                 onClick={handleConnect}

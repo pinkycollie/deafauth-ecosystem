@@ -3,7 +3,6 @@ import { AuthProviderType } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { SpinnerIcon } from '../icons/SpinnerIcon';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
-import ErrorDisplay from '../ErrorDisplay';
 
 interface ConnectorProps {
     onBack: () => void;
@@ -38,7 +37,7 @@ const WalletConnector: React.FC<ConnectorProps> = ({ onBack, onSuccess }) => {
             <h3 className="text-xl font-bold text-center text-white mb-2">Connect Wallet</h3>
             <p className="text-center text-gray-400 text-sm mb-6">Please sign the message with your wallet to continue.</p>
 
-            <ErrorDisplay message={error} />
+            {error && <p className="text-red-400 text-center text-sm mb-4">{error}</p>}
             
             <button
                 onClick={handleConnect}
