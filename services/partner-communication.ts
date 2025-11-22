@@ -73,7 +73,11 @@ export class PartnerCommunicationService {
 
       const deafUserProfile: DeafUserProfile = {
         userId,
-        isDeaf: profile.hearing_tech_used || profile.screen_reader_used || false,
+        // Determine if user is deaf based on deaf identity markers
+        // Users with deaf_identity set or sign language preferences are considered deaf
+        isDeaf: profile.hearing_tech_used === true || 
+                (profile.language_preferences?.signLanguages?.length ?? 0) > 0 ||
+                profile.interpretation_preferences?.required === true,
         signLanguages: profile.language_preferences?.signLanguages || [],
         communicationPreferences: {
           preferred: profile.preferred_communication_methods || ['ASL'],
@@ -188,13 +192,18 @@ export class PartnerCommunicationService {
    */
   async updateAccessibilityPreferences(
     userId: string,
-    preferences: Partial<DeafUserProfile['accessibilitySettings']>
+    preferences: Partial<DeafUserProfile['communicationPreferences']>
   ): Promise<boolean> {
     try {
       const { error } = await supabase
         .from('accessibility_profiles')
         .update({
-          visual_accommodation_needs: preferences,
+          preferred_communication_methods: preferences.preferred,
+          emergency_communication_preferences: {
+            requiresVisualAlerts: preferences.requiresVisualAlerts,
+            requiresCaptions: preferences.requiresCaptions,
+            requiresInterpreter: preferences.requiresInterpreter,
+          },
           last_updated: new Date().toISOString(),
         })
         .eq('user_id', userId);

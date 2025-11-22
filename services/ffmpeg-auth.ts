@@ -135,17 +135,28 @@ export class FFmpegVideoAuthService {
     videoId: string
   ): Promise<{ data: any; error: any }> {
     const fileName = `${userId}/${videoId}.mp4`;
-    const fileStream = createReadStream(filePath);
+    
+    let fileStream: any = null;
+    try {
+      fileStream = createReadStream(filePath);
+      
+      const { data, error } = await supabase.storage
+        .from(this.config.videoBucket)
+        .upload(fileName, fileStream, {
+          contentType: 'video/mp4',
+          cacheControl: '3600',
+          upsert: false,
+        });
 
-    const { data, error } = await supabase.storage
-      .from(this.config.videoBucket)
-      .upload(fileName, fileStream, {
-        contentType: 'video/mp4',
-        cacheControl: '3600',
-        upsert: false,
-      });
-
-    return { data, error };
+      return { data, error };
+    } catch (uploadError) {
+      return { data: null, error: uploadError };
+    } finally {
+      // Ensure stream is properly closed
+      if (fileStream && typeof fileStream.destroy === 'function') {
+        fileStream.destroy();
+      }
+    }
   }
 
   /**

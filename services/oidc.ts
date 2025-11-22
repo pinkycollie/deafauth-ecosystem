@@ -181,11 +181,17 @@ export class OIDCProvider {
 
   /**
    * Validate Supabase custom auth token
+   * Note: In production, this should use Supabase's JWT secret from the project settings
    */
-  async validateSupabaseAuth(supabaseToken: string): Promise<boolean> {
+  async validateSupabaseAuth(supabaseToken: string, supabaseJwtSecret?: string): Promise<boolean> {
     try {
-      // Supabase uses JWT tokens - verify the signature
-      const { payload } = await jwtVerify(supabaseToken, this.jwtSecret);
+      // Use Supabase JWT secret if provided, otherwise fall back to DeafAuth secret
+      // WARNING: This is a simplified implementation. In production, use Supabase's actual JWT secret
+      const secret = supabaseJwtSecret 
+        ? new TextEncoder().encode(supabaseJwtSecret)
+        : this.jwtSecret;
+      
+      const { payload } = await jwtVerify(supabaseToken, secret);
       return !!payload.sub;
     } catch {
       return false;
