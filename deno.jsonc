@@ -1,1 +1,48 @@
-{\n  // Deno configuration file for managing tasks\n  // and ensuring compatibility across multiple environments\n  \n  "$schema": "https://deno.land/x/deno_json_schema/deno-schema.json",\n  \n  "tasks": {\n    "dev": {\n      "cmd": "deno run --watch --allow-all src/main.ts",\n      "description": "Run the development server"\n    },\n    "test": {\n      "cmd": "deno test",\n      "description": "Run tests"\n    }\n  },\n  \n  "importMap": "import_map.json",\n  \n  "compilerOptions": {\n    "strict": true\n  },\n  \n  "compatibility": {\n    "deno": "^1.0.0",\n    "bun": "^0.1.0",\n    "node": "^16.0.0"\n  }\n}
+{
+  // Deno configuration file for managing tasks
+  // and ensuring compatibility across multiple environments
+  
+  "$schema": "https://deno.land/x/deno_json_schema/deno-schema.json",
+  
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-read --allow-write --allow-env src/index.ts",
+    "build": "deno bundle src/index.ts dist/bundle.js",
+    "test": "deno test --allow-net --allow-read --allow-env",
+    "start": "deno run --allow-net --allow-read --allow-write --allow-env src/index.ts"
+  },
+  
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "express": "npm:express@^4.18.2",
+    "cors": "npm:cors@^2.8.5",
+    "helmet": "npm:helmet@^7.1.0",
+    "jose": "https://deno.land/x/jose@v5.2.0/index.ts",
+    "openid-client": "npm:openid-client@^5.6.1"
+  },
+  
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.window", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  
+  "compatibility": {
+    "deno": "^1.0.0",
+    "bun": "^0.1.0",
+    "node": "^16.0.0"
+  },
+  
+  "lint": {
+    "include": ["src/", "services/"],
+    "exclude": ["node_modules/", "dist/"]
+  },
+  
+  "fmt": {
+    "include": ["src/", "services/"],
+    "exclude": ["node_modules/", "dist/"],
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "semiColons": true
+  }
+}

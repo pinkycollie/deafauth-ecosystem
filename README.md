@@ -17,6 +17,11 @@ DeafAUTH is the identity and authentication foundation for:
 
 - ✅ Deaf-first UI design (ASL-friendly, visual-first)
 - ✅ Supabase-powered authentication
+- ✅ **OpenID Connect (OIDC) compliant**
+- ✅ **FFmpeg video authentication for sign language**
+- ✅ **Deno and Node.js compatible**
+- ✅ **Partner integration (PinkSync, 360 Magicians)**
+- ✅ **Adaptive accessibility communication**
 - ✅ Fibronrose trust scoring
 - ✅ Token-based API validation
 - ✅ Ready for Web3 integration
@@ -125,6 +130,37 @@ http-server public -p 8000
 ```
 
 Then visit: `http://localhost:8000`
+
+-----
+
+## 🔐 Production-Ready Authentication
+
+DeafAuth now includes enterprise-grade authentication features:
+
+### OIDC/OpenID Connect
+- Full OpenID Connect Core 1.0 compliance
+- OAuth 2.0 with PKCE for secure authorization
+- Custom deaf-specific JWT claims
+- Compatible with standard OIDC providers
+
+### FFmpeg Video Authentication
+- One-time sign language authentication
+- Secure video processing and storage in Supabase
+- Automatic cleanup after 30 days or security rise
+- H.264 compression for efficient storage
+
+### Deno Runtime Support
+- Compatible with Node.js, Deno, and Bun
+- ESM imports and npm specifiers
+- Full TypeScript support across runtimes
+
+### Partner Integration
+- Automatic notification to PinkSync and 360 Magicians
+- Deaf user identification for adaptive UX
+- Accessibility recommendations API
+- Minimal, adaptive interface coordination
+
+See [SECURITY.md](./SECURITY.md) for detailed documentation.
 
 -----
 
@@ -257,11 +293,16 @@ vercel --prod
 - [x] Deaf-first UI design
 - [x] Fibronrose trust logging
 - [x] API token validation
-- [ ] ASL video onboarding
+- [x] **OIDC/OpenID Connect compliance**
+- [x] **FFmpeg video authentication for sign language**
+- [x] **Supabase custom auth integration**
+- [x] **Deno runtime compatibility**
+- [x] **Partner communication (PinkSync, 360 Magicians)**
+- [x] **Adaptive accessibility middleware**
+- [ ] ASL video onboarding UI
 - [ ] Signing avatar integration
 - [ ] Web3 wallet connection
 - [ ] DAO governance permissions
-- [ ] Multi-factor authentication (visual)
 
 -----
 
