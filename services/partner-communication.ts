@@ -22,6 +22,8 @@ export interface DeafUserProfile {
     adaptiveContent: boolean;
     minimalMode: boolean;
   };
+  // Fibronrose trust score - a verification score from the Fibronrose trust system
+  // Range: 0-100, higher scores indicate more verified/trusted users
   fibronroseScore?: number;
 }
 
@@ -52,8 +54,6 @@ export class PartnerCommunicationService {
     try {
       // Query user profile from Supabase
       const { data: profile, error: profileError } = await supabase
-        .from('deafauth')
-        .schema('deafauth')
         .from('accessibility_profiles')
         .select('*')
         .eq('user_id', userId)
@@ -66,8 +66,6 @@ export class PartnerCommunicationService {
 
       // Get user verification details
       const { data: verification } = await supabase
-        .from('deafauth')
-        .schema('deafauth')
         .from('user_verification')
         .select('*')
         .eq('user_id', userId)
@@ -165,8 +163,6 @@ export class PartnerCommunicationService {
   private async logPartnerNotification(notification: PartnerNotification): Promise<void> {
     try {
       const { error } = await supabase
-        .from('accessibility')
-        .schema('accessibility')
         .from('service_logs')
         .insert({
           user_id: notification.userId,
@@ -196,8 +192,6 @@ export class PartnerCommunicationService {
   ): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('deafauth')
-        .schema('deafauth')
         .from('accessibility_profiles')
         .update({
           visual_accommodation_needs: preferences,

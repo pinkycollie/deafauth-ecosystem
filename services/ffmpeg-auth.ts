@@ -153,8 +153,6 @@ export class FFmpegVideoAuthService {
    */
   private async storeMetadata(metadata: VideoAuthMetadata): Promise<void> {
     const { error } = await supabase
-      .from('deafauth')
-      .schema('deafauth')
       .from('visual_credentials')
       .insert({
         user_id: metadata.userId,
@@ -204,8 +202,6 @@ export class FFmpegVideoAuthService {
 
     // Also remove metadata
     await supabase
-      .from('deafauth')
-      .schema('deafauth')
       .from('visual_credentials')
       .delete()
       .eq('biometric_hash', videoId);
@@ -218,8 +214,6 @@ export class FFmpegVideoAuthService {
    */
   async hasVideoAuth(userId: string): Promise<boolean> {
     const { data, error } = await supabase
-      .from('deafauth')
-      .schema('deafauth')
       .from('visual_credentials')
       .select('id')
       .eq('user_id', userId)
@@ -236,8 +230,6 @@ export class FFmpegVideoAuthService {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
     const { data, error } = await supabase
-      .from('deafauth')
-      .schema('deafauth')
       .from('visual_credentials')
       .select('user_id, biometric_hash')
       .eq('biometric_type', 'sign_language_video')

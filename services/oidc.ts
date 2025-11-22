@@ -32,6 +32,7 @@ export class OIDCProvider {
   private client: Client | null = null;
   private config: OIDCConfig;
   private jwtSecret: Uint8Array;
+  private codeVerifiers: Map<string, string> = new Map(); // Store code verifiers by state
 
   constructor(config: OIDCConfig, jwtSecret: string) {
     this.config = {
@@ -62,19 +63,23 @@ export class OIDCProvider {
   /**
    * Generate authorization URL for deaf-first authentication flow
    */
-  getAuthorizationUrl(state?: string): string {
+  getAuthorizationUrl(state?: string): { url: string; state: string; codeVerifier: string } {
     if (!this.client) {
       throw new Error('OIDC client not initialized');
     }
 
     const codeVerifier = generators.codeVerifier();
     const codeChallenge = generators.codeChallenge(codeVerifier);
+    const authState = state || generators.state();
 
-    return this.client.authorizationUrl({
+    // Store code verifier for later use in callback
+    this.codeVerifiers.set(authState, codeVerifier);
+
+    const url = this.client.authorizationUrl({
       scope: this.config.scope,
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
-      state: state || generators.state(),
+      state: authState,
       // Add deaf-specific claims
       claims: JSON.stringify({
         userinfo: {
@@ -84,20 +89,31 @@ export class OIDCProvider {
         },
       }),
     });
+
+    return { url, state: authState, codeVerifier };
   }
 
   /**
    * Exchange authorization code for tokens
    */
-  async handleCallback(params: URLSearchParams): Promise<DeafAuthClaims> {
+  async handleCallback(params: URLSearchParams, state: string): Promise<DeafAuthClaims> {
     if (!this.client) {
       throw new Error('OIDC client not initialized');
     }
 
+    // Retrieve the stored code verifier
+    const codeVerifier = this.codeVerifiers.get(state);
+    if (!codeVerifier) {
+      throw new Error('Code verifier not found for state');
+    }
+
+    // Clean up stored verifier
+    this.codeVerifiers.delete(state);
+
     const tokenSet = await this.client.callback(
       this.config.redirectUri,
       params,
-      { code_verifier: generators.codeVerifier() }
+      { code_verifier: codeVerifier, state }
     );
 
     // Get user info with deaf-specific claims
