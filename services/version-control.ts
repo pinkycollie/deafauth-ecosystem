@@ -113,7 +113,7 @@ export class VersionControlService {
 
     try {
       // Validate data exists
-      if (data === null || data === undefined) {
+      if (data == null) {
         errors.push('Data is null or undefined');
       }
 

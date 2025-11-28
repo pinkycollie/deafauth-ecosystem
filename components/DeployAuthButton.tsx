@@ -7,6 +7,13 @@ import {
 import { SpinnerIcon } from './icons/SpinnerIcon';
 import { CheckIcon } from './icons/CheckIcon';
 
+// Error message constants for maintainability and localization
+const ERROR_MESSAGES = {
+  DEPLOYMENT_CHECKS_FAILED: 'Deployment checks failed',
+  FAILED_STATUS_CHECK: 'Failed to check deployment status',
+  DEPLOYMENT_FAILED: 'Deployment failed',
+} as const;
+
 interface DeployAuthButtonProps {
   onDeploy?: (status: DeploymentStatus) => void;
   environment?: 'development' | 'staging' | 'production';
@@ -48,11 +55,11 @@ const DeployAuthButton: React.FC<DeployAuthButtonProps> = ({
             .filter(c => !c.passed)
             .map(c => c.message)
             .join('; ');
-          setError(failedChecks || 'Deployment checks failed');
+          setError(failedChecks || ERROR_MESSAGES.DEPLOYMENT_CHECKS_FAILED);
         }
       } catch (err) {
         setDeployState('error');
-        setError(err instanceof Error ? err.message : 'Failed to check deployment status');
+        setError(err instanceof Error ? err.message : ERROR_MESSAGES.FAILED_STATUS_CHECK);
       }
     };
 
@@ -77,7 +84,7 @@ const DeployAuthButton: React.FC<DeployAuthButtonProps> = ({
       }
     } catch (err) {
       setDeployState('error');
-      setError(err instanceof Error ? err.message : 'Deployment failed');
+      setError(err instanceof Error ? err.message : ERROR_MESSAGES.DEPLOYMENT_FAILED);
     }
   };
 
