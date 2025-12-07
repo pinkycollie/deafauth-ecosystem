@@ -23,6 +23,10 @@ reports/
 *.local
 public/build/
 
+# TypeScript compiled outputs
+*.js
+*.js.map
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
