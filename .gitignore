@@ -89,7 +89,6 @@ Desktop.ini
 # Misc local/system files
 .vagrant/
 *.log.*
-.cache
 tmp/
 temp/
 
@@ -102,7 +101,6 @@ firebase-debug.log
 .surge/
 
 # Ignore IDE/devops/tooling caches
-.idea/
 *.iml
 out-tsc
 
