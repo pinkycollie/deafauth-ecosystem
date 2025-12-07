@@ -3,22 +3,112 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
+yarn-error.log
 pnpm-debug.log*
-lerna-debug.log*
+lerna-debug.log
 
-node_modules
-dist
-dist-ssr
+# Dependencies / builds
+node_modules/
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.cache-loader/
+.parcel-cache/
+coverage/
+reports/
 *.local
+public/build/
+
+# TypeScript compiled outputs
+*.js
+*.js.map
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Environment and secret files (do NOT commit these)
+.env
+.env.local
+.env.development.local
+.env.test
+.env.production
+.env.*.local
+.envrc
+# Note: .env.example should be committed as a template
+
+# Private keys and certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+id_rsa*
+id_ecdsa*
+ssh-keys/
+private.key
+private.pem
+
+# Service account / credentials
+credentials.json
+service-account.json
+client_secret.json
+*.credentials.json
+google-credentials.json
+aws-credentials
+.aws/credentials
+.aws/config
+
+# Token / auth files
+*.token
+*.auth
+.npmrc
+.yarnrc
+.pnpmfile.cjs
+.pnpm-debug.log
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files and backups
+*~
+*.orig
+*.swp
+*.swo
+
+# Misc local/system files
+.vagrant/
+*.log.*
+.cache
+tmp/
+temp/
+
+# CI / deployment specific (local)
+.vercel/
+.netlify/
+.netlify/state.json
+firebase-debug.log
+.firebase/
+.surge/
+
+# Ignore IDE/devops/tooling caches
+.idea/
+*.iml
+out-tsc
+
+# Ignore generated docs / assets
+docs/build/
+docs/_site/
